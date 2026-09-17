@@ -1,0 +1,20 @@
+mkdir Work
+cd Work
+mkdir 'Лабораторная работа №1!' 'Гольцев Андрей Евгеньевич'
+chmod 772 'Лабораторная работа №1!'
+chmod 200 'Гольцев Андрей Евгеньевич'
+touch 'Text @1' 'Text $2' 'Text #3'
+printf 'Птица говорун отличается умом и сообразительностью!\nОтличается умом, отличается сообразительностью...' > 'Text @1'
+cp 'Text @1' 'Text $2'
+mv 'Text $2' 'Лабораторная работа №1!' && cp 'Text @1' 'Гольцев Андрей Евгеньевич'
+gzip 'Text @1' 'Text #3'
+tar -cf MyAchiv.tar 'Text @1.gz' 'Text #3.gz'
+gunzip 'Text @1.gz' 'Text #3.gz'
+head -n 1 'Text @1' >> 'Text #3' && printf 'Будь осторожен! Преступник вооружен!' >> 'Text #3'
+cd 'Гольцев Андрей Евгеньевич'
+touch 'Result_one' && tac 'Text @1' > 'Result_one'
+mv 'Result_one' 'Result_two'
+cd ..
+cd 'Лабораторная работа №1!'
+touch 'Result_3' && grep -h '^' ../'Гольцев Андрей Евгеньевич'/T* > 'Result_3'
+uname -a >> 'Result_3' && date >> 'Result_3'
