@@ -1,62 +1,52 @@
-format ELF64
+format ELF
 public _start
-public exit
-public print_symb
 
-section '.bss' writable
+section '.data' writeable
     place db 0
-
 section '.text' executable
+
 _start:
-
-    mov rax, 1167271174     
-    xor rbx, rbx
-
+    mov eax, 1167271174
+    xor ebx, ebx
 .sum:
-    xor rdx, rdx
-    mov rsi, 10
-    div rsi
-    add rbx, rdx
-    test rax, rax
+    xor edx, edx
+    mov esi, 10
+    div esi
+    add ebx, edx
+    test eax, eax
     jnz .sum
-
-    mov rax, rbx            
-    xor rcx, rcx
+    mov eax, ebx
+    xor ecx, ecx
 
 .push_symb:
-    xor rdx, rdx
-    mov rsi, 10
-    div rsi
+    xor edx, edx
+    mov esi, 10
+    div esi
     add dl, '0'
-    push rdx
-    inc rcx
-    test rax, rax
+    push edx
+    inc ecx
+    test eax, eax
     jnz .push_symb
-
 .pop_symb:
-    pop rax
-    push rcx
-    call print_symb
-    pop rcx
-    dec rcx
-    jnz .pop_symb
-
-    mov al, 0xA
-    call print_symb
-    call exit
-
-print_symb:
-    push rax
+    pop eax
+    mov [place], al
     mov eax, 4
     mov ebx, 1
-    pop rdx
-    mov [place], dl
+    push ecx
     mov ecx, place
     mov edx, 1
     int 0x80
-    ret
+    pop ecx
+    dec ecx
+    jnz .pop_symb
+    mov al, 0xA
+    mov [place], al
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, place
+    mov edx, 1
+    int 0x80
 
-exit:
     mov eax, 1
     xor ebx, ebx
     int 0x80

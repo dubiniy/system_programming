@@ -1,56 +1,46 @@
-format ELF64
+format ELF
 public _start
-public exit
-public print_symb
 
-section '.bss' writable
-    array db 406 dup ('%') 
-    place db 1
+section '.data' writeable
+place db 1
 
 section '.text' executable
+
 _start:
-    xor rcx, rcx
-    xor rbx, rbx
-    
-    .iter:
-        mov al, [array + rcx]
-        push rcx
-        push rbx
-        call print_symb
-        pop rbx
-        pop rcx
-        
-        inc rbx
-        cmp rbx, 14
-        jne .check_max
-            
-            push rcx
-            push rbx
-            mov al, 0xA
-            call print_symb
-            pop rbx
-            pop rcx
-            xor rbx, rbx
-            
-        .check_max:
-        inc rcx
-        cmp rcx, 406
-    jne .iter
-    
-    call exit
+xor ecx, ecx
+xor edi, edi
 
-print_symb:
-    push rax
-    mov eax, 4
-    mov ebx, 1
-    pop rdx
-    mov [place], dl
-    mov ecx, place
-    mov edx, 1
-    int 0x80
-    ret
+.line:
+mov al, '%'
+mov [place], al
+mov eax, 4
+mov ebx, 1
+push ecx
+mov ecx, place
+mov edx, 1
+int 0x80
+pop ecx
 
-exit:
-    mov eax, 1
-    mov ebx, 0
-    int 0x80
+inc ecx
+inc edi
+cmp edi, 14
+jne .max
+
+mov al, 0xA
+mov [place], al
+mov eax, 4
+mov ebx, 1
+push ecx
+mov ecx, place
+mov edx, 1
+int 0x80
+pop ecx
+xor edi, edi
+
+.max:
+cmp ecx, 406
+jne .line
+
+mov eax, 1
+xor ebx, ebx
+int 0x80

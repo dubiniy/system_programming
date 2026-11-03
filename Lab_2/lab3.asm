@@ -1,64 +1,49 @@
-format ELF64
+format ELF
 public _start
-public exit
-public print_symb
 
-section '.bss' writable
-    place db 1
+section '.data' writeable
+pla db 1
 
 section '.text' executable
 _start:
-    xor rcx, rcx
-    mov rbx, 1
-    xor r8, r8
+mov ecx, 1
+mov edx, 1
 
-.line:
-    cmp rcx, 406
-    jge .done
+.iteration:
+push ecx
+push edx
 
-    mov al, '%'
-    push rcx
-    push rbx
-    push r8
-    call print_symb
-    pop r8
-    pop rbx
-    pop rcx
+mov al, '%'
+mov [pla], al
+mov eax, 4
+mov ebx, 1
+mov ecx, pla
+mov edx, 1
+int 0x80
 
-    inc rcx
-    inc r8
+pop edx
+pop ecx
 
-    cmp r8, rbx
-    jne .line
+dec edx
+jnz .iteration
 
-        push rcx
-        push rbx
-        push r8
-        mov al, 0xA
-        call print_symb
-        pop r8
-        pop rbx
-        pop rcx
+push ecx
 
-        xor r8, r8
-        inc rbx
-        jmp .line
+mov al, 0xA
+mov [pla], al
+mov eax, 4
+mov ebx, 1
+mov ecx, pla
+mov edx, 1
+int 0x80
 
-.done:
-    call exit
+pop ecx
 
-print_symb:
-    push rax
-    mov eax, 4
-    mov ebx, 1
-    pop rdx
-    mov [place], dl 
-    mov ecx, place
-    mov edx, 1
-    int 0x80
-    ret
+inc ecx
+mov edx, ecx
+cmp ecx, 28
+jne .iteration
 
-exit:
-    mov eax, 1
-    mov ebx, 0
-    int 0x80
+mov eax, 1
+xor ebx, ebx
+int 0x80
